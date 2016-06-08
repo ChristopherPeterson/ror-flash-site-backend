@@ -1,0 +1,19 @@
+<% form_for comment do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </p>
+  <p>
+    <%= f.label :comment %><br />
+    <%= f.text_area :comment %>
+  </p>
+  <p>
+    <%= f.submit "Submit" %>
+  </p>
+  
+  <%= hidden_field 'commentable', 'commentable', :value => object.type %>
+  <%= hidden_field 'commentable', 'commentable_id', :value => object.id %>
+  
+<% end %>

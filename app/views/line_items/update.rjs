@@ -1,0 +1,8 @@
+page["line_item_#{@line_item.id}_quantity"].replace_html "#{@line_item.quantity}"
+page["line_item_#{@line_item.id}_full_price"].replace_html "#{number_to_currency @line_item.full_price}"
+page["cart_#{@cart.id}_total"].replace_html "Total: #{number_to_currency @cart.total_price}"
+
+page.replace_html "notice", 
+                  "<div id=\"flash_notice\">#{flash[:notice]}</div>"
+flash.discard
+page << escape_javascript("showHome();")

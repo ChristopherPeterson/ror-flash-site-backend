@@ -1,0 +1,5 @@
+page["option_#{@option_id}_enabled"].replace_html(link_to_remote "Unpublish Option", :url => disable_option_path(@option_id), :method => :get, :complete => "showHome()")
+
+page.replace_html "notice", 
+                  "<div id=\"flash_notice\">#{flash[:notice]}</div>"
+flash.discard

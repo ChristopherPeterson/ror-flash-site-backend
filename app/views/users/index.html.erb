@@ -1,0 +1,51 @@
+<% title "User Administration" %>
+<% content_for :nav do %>
+  <% if can?(:update, Category) || can?(:update, Item) || can?(:update, User) || can?(:index, Cart) %>
+  <li class="last_item"><a href="#">Admin Tools</a>
+    <ul>
+      <% if can?(:index, Cart) %>
+      <li><%= link_to "All Orders", carts_path %></li>
+      <% end %>
+      <% if can?(:update, User) %>
+      <li><%= link_to "All Users", users_path %></li>
+      <li><%= link_to "New User", formatted_new_user_path(:format => "html"), :class => "lightwindow" %></li>
+      <% end %>
+      <% if can? :update, Category %>
+      <li><%= link_to "New Gallery", formatted_new_category_path(:format => "html"), :class => "lightwindow" %></li>
+      <% end %>
+      <% if can? :update, Item %>
+      <li><%= link_to "New Item", new_item_path %></li>
+      <% end %>
+    </ul>
+  </li>
+  <% end %>
+<% end %>
+
+<% if can? :update, User %>
+<table class="line_items">
+  <tr>
+    <th class="first_item">User Id</th>
+    <th>Username</th>
+    <th>Email Address</th>
+    <th>User Actions</th>
+    <th>Modify</th>
+  </tr>
+  <% for user in @users %>
+    <% if (!user.role?(:admin)) || (current_user.role?(:admin)) %>
+    <tr id="<%= "user_#{user.id}"%>" class="<%= cycle :odd, :even %>">
+      <td class="first_item"><%=h user.id %></td>
+      <td><%=h user.username %></td>
+      <td><%=h user.email %></td>
+      <td>
+        <%= link_to "User's Galleries", categories_path(:user_id => user.id) %>
+        <%= link_to "User's Orders", carts_path(:user_id => user.id) %>
+      </td>
+      <td>
+        <%= link_to "Edit", formatted_edit_user_path(user, :format => "html"), :class => "lightwindow" %>
+        <%= link_to_remote 'Remove', :url => user, :confirm => 'Are you sure?', :method => :delete, :complete => "showHome()" %>
+      </td>
+    </tr>
+    <% end %>
+  <% end %>
+</table>
+<% end %>

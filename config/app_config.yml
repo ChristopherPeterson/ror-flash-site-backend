@@ -1,0 +1,135 @@
+development:
+  paypal_email: info_1306639800_biz@bocustudio.com
+  paypal_secret: foobar
+  paypal_cert_id: KDWT4RBAECR8A
+  paypal_url: "https://www.sandbox.paypal.com/cgi-bin/webscr"
+  
+  category_flash_create: "Successfully created category."
+  category_flash_update: "Successfully updated category."
+  category_flash_destroy: "Successfully deleted category."
+  category_flash_sort: "Successfully sorted categories."
+  category_flash_enable: "Successfully published category."
+  category_flash_disable: "Successfully unpublished category."
+
+  item_flash_create: "Successfully created item."
+  item_flash_update: "Successfully updated item."
+  item_flash_destroy: "Successfully deleted item."
+  item_flash_sort: "Successfully sorted items."
+  item_flash_enable: "Successfully published item."
+  item_flash_disable: "Successfully unpublished item."
+
+  option_flash_create: "Successfully created option."
+  option_flash_update: "Successfully updated option."
+  option_flash_destroy: "Successfully deleted option."
+  option_flash_sort: "Successfully sorted options."
+  option_flash_enable: "Successfully published option."
+  option_flash_disable: "Successfully unpublished option."
+
+  post_flash_create: "Successfully created post."
+  post_flash_update: "Successfully updated post."
+  post_flash_destroy: "Successfully deleted post."
+  post_flash_sort: "Successfully sorted post."
+  post_flash_enable: "Successfully published post."
+  post_flash_disable: "Successfully unpublished post."
+
+  comment_flash_create: "Successfully created comment."
+  comment_flash_update: "Successfully updated comment."
+  comment_flash_destroy: "Successfully deleted comment."
+  comment_flash_sort: "Successfully sorted comment."
+  comment_flash_enable: "Successfully published comment."
+  comment_flash_disable: "Successfully unpublished comment."
+
+  user_flash_create: "Registration successful."
+  user_flash_update: "Successfully updated user profile."
+  user_flash_destroy: "Successfully deleted user."
+  
+test:
+  paypal_email: test@example.com
+  paypal_secret: testsecret
+  paypal_cert_id: KDWT4RBAECR8A
+  paypal_url: testpaypalurl
+  
+  category_flash_create: "Successfully created category."
+  category_flash_update: "Successfully updated category."
+  category_flash_destroy: "Successfully deleted category."
+  category_flash_sort: "Successfully sorted categories."
+  category_flash_enable: "Successfully published category."
+  category_flash_disable: "Successfully unpublished category."
+
+  item_flash_create: "Successfully created item."
+  item_flash_update: "Successfully updated item."
+  item_flash_destroy: "Successfully deleted item."
+  item_flash_sort: "Successfully sorted items."
+  item_flash_enable: "Successfully published item."
+  item_flash_disable: "Successfully unpublished item."
+
+  option_flash_create: "Successfully created option."
+  option_flash_update: "Successfully updated option."
+  option_flash_destroy: "Successfully deleted option."
+  option_flash_sort: "Successfully sorted options."
+  option_flash_enable: "Successfully published option."
+  option_flash_disable: "Successfully unpublished option."
+
+  post_flash_create: "Successfully created post."
+  post_flash_update: "Successfully updated post."
+  post_flash_destroy: "Successfully deleted post."
+  post_flash_sort: "Successfully sorted post."
+  post_flash_enable: "Successfully published post."
+  post_flash_disable: "Successfully unpublished post."
+
+  comment_flash_create: "Successfully created comment."
+  comment_flash_update: "Successfully updated comment."
+  comment_flash_destroy: "Successfully deleted comment."
+  comment_flash_sort: "Successfully sorted comment."
+  comment_flash_enable: "Successfully published comment."
+  comment_flash_disable: "Successfully unpublished comment."
+
+  user_flash_create: "Registration successful."
+  user_flash_update: "Successfully updated user profile."
+  user_flash_destroy: "Successfully deleted user."
+  
+production:
+  paypal_email: nima@shutterluxestudio.com
+  paypal_secret: d350a7d5-0b23-4fae-b57c-4f58f62e2128
+  paypal_cert_id: KDWT4RBAECR8A
+  paypal_url: "https://www.paypal.com/cgi-bin/webscr"
+
+  category_flash_create: "Successfully created category."
+  category_flash_update: "Successfully updated category."
+  category_flash_destroy: "Successfully deleted category."
+  category_flash_sort: "Successfully sorted categories."
+  category_flash_enable: "Successfully published category."
+  category_flash_disable: "Successfully unpublished category."
+
+  item_flash_create: "Successfully created item."
+  item_flash_update: "Successfully updated item."
+  item_flash_destroy: "Successfully deleted item."
+  item_flash_sort: "Successfully sorted items."
+  item_flash_enable: "Successfully published item."
+  item_flash_disable: "Successfully unpublished item."
+
+  option_flash_create: "Successfully created option."
+  option_flash_update: "Successfully updated option."
+  option_flash_destroy: "Successfully deleted option."
+  option_flash_sort: "Successfully sorted options."
+  option_flash_enable: "Successfully published option."
+  option_flash_disable: "Successfully unpublished option."
+  
+  post_flash_create: "Successfully created post."
+  post_flash_update: "Successfully updated post."
+  post_flash_destroy: "Successfully deleted post."
+  post_flash_sort: "Successfully sorted post."
+  post_flash_enable: "Successfully published post."
+  post_flash_disable: "Successfully unpublished post."
+
+  comment_flash_create: "Successfully created comment."
+  comment_flash_update: "Successfully updated comment."
+  comment_flash_destroy: "Successfully deleted comment."
+  comment_flash_sort: "Successfully sorted comment."
+  comment_flash_enable: "Successfully published comment."
+  comment_flash_disable: "Successfully unpublished comment."
+
+  user_flash_create: "Registration successful."
+  user_flash_update: "Successfully updated user profile."
+  user_flash_destroy: "Successfully deleted user."
+  

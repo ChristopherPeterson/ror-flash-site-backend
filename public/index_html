@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+  <head>
+  	
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  	<meta name="author" content="Boco Studio - A Creative Studio">
+  	<meta name="description" content="Portfolio of Graphic Designer, Web Designer, and Illustrator, Bocu Studio - A Creative Studio">
+  	<meta name="keywords" content="Bocu Studio, A Creative Studio, Freelance Graphic Designer, Freelance Illustrator, Freelance Web Designer">
+  
+  	<title>Bocu Studio - A Creative Studio</title>
+  
+  	<script src="/javascripts/prototype.js?1294511950" type="text/javascript"></script>
+    <script src="/javascripts/effects.js?1294511950" type="text/javascript"></script>
+    <script src="/javascripts/dragdrop.js?1294511950" type="text/javascript"></script>
+    <script src="/javascripts/controls.js?1294511950" type="text/javascript"></script>
+    
+    <script src="/javascripts/application.js?1304314540" type="text/javascript"></script>
+    <link rel="stylesheet" href="stylesheets/application.css" title="Bocu Studio - A Creative Studio" media="all" />
+  	
+  	<!--[if lt IE 9]>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+  </head>
+
+  <body>
+    
+		<div id="main">
+  	
+      <aside id="left">  
+
+        <a href="#" onclick="showHome();"><img src="/images/BocuSiteLogo_344x220.png" /></a>
+      
+        <nav>	
+    	    <ul>
+            <li><a href="#" onclick="showAbout();">About</a></li>
+            <li><a href="#" onclick="showServices();">Services</a></li>
+            <li><a href="#" onclick="showContact();">Contact</a></li>
+            <li><a href="#identity" onclick="showIdentity();">Identity</a></li>
+            <li><a href="#branding" onclick="showBranding();">Branding</a></li>
+            <li><a href="#web" onclick="showWeb();">Web</a></li>
+            <li><a href="#invitation" onclick="showInvitation();">Invitation</a></li>
+            <li><a href="#apparel" onclick="showApparel();">Apparel</a></li>
+            <li><a href="#illustration" onclick="showIllustration();">Illustration</a></li>
+          </ul>
+        </nav> 
+        
+      </aside>
+  	  
+      <div id="content" class="content_norm">
+        
+        <header>
+          
+          <section id="about" style="display: none;">
+      
+    			  <p>
+      			  Welcome to our little boutique design studio. We pride ourselves on our original, handmade custom solutions designed to meet your needs.
+      			  It all started when a boy [web designer] met a girl [graphic designer]. They fell in love &amp; Bocu Studio was born. 
+      			  Together we offer a complete solution for all your design needs. Please <a href="#" onclick="showContact();">contact</a> us for any project that you have in mind.
+    			  </p>
+    			    
+        	</section>
+      
+        	<section id="services" style="display: none;">
+      
+    			  <article>
+    			    <header>Creative Services</header>
+          	  <ul>
+        			  <li>Identity &amp; Branding</li>
+                <li>Web &amp; Print</li>
+                <li>Invitation &amp; Apparel</li>
+                <li>Illustration</li>
+        			</ul>
+      			</article>
+
+            <article class="nth_item">
+    			    <header>Web Services</header>
+          	  <ul>
+        			  <li>Flash, ActionScript 3.0, &amp; 3D</li>
+                <li>HTML5, XHTML, CSS 3.0, AJAX, &amp; Javascript</li>
+                <li>Ruby on Rails, PHP, &amp; MySQL</li>
+                <li>eCommerce, SEO, CMS, &amp; Website Hosting</li>
+        			</ul>
+      			</article>
+        
+        	</section>
+        	
+        	<section id="contact" style="display: none;">
+      
+    			  <address>
+      			  <p>Email: <a href="mailto:info@bocustudio.com">info@bocustudio.com</a></p>
+              <p>Phone: 916.524.4882</p>
+      			</address>
+        
+        	</section>
+        	
+        	<section id="notice" style="display: none;">
+        	  
+  	        &nbsp;
+  	        
+	        </section>
+        	
+      	</header>
+      	
+    	  <section id="portfolio">
+          
+    	    &nbsp;
+    	    
+      	</section>
+    
+  	  	<section id="copyright">
+    	    Copyright &copy; <time datetime="2011-05-12T23:00:00-08:00">2011</time> Bocu Studio
+  	    </section>
+      	
+    	</div>
+    	
+    </div>
+  	
+  </body>
+
+</html>

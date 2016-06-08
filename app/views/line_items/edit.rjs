@@ -1,0 +1,3 @@
+page["line_item_#{@line_item.id}_quantity"].replace_html :partial => "line_items/form_js"
+
+flash.discard

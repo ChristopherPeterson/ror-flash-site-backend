@@ -1,0 +1,5 @@
+page["category_#{@category_id}_enabled"].replace_html(link_to_remote "Unpublish Gallery", :url => disable_category_path(@category_id), :method => :get, :complete => "showHome()")
+
+page.replace_html "notice", 
+                  "<div id=\"flash_notice\">#{flash[:notice]}</div>"
+flash.discard

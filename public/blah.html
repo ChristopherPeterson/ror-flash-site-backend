@@ -1,0 +1,276 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Scroller Menu</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style>
+	#message {
+		position: absolute;
+		top: 120px;
+		left: 700px;
+		width: 450px;
+		height: 50px;
+		font-size: 50px;
+	}
+	#scroller {
+		position: absolute;
+		top: 100px;
+		left: 300px;
+		width: 100px;
+		height: 50px;
+	}
+	
+	#scroller1 {
+		position: absolute;
+		top: 100px;
+		left: 420px;
+		width: 100px;
+		height: 50px;
+	}
+	
+	#scroller2 {
+		position: absolute;
+		top: 100px;
+		left: 540px;
+		width: 100px;
+		height: 50px;
+	}
+	
+	.scroller_container {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		border: 10px solid #444;
+		border-radius: 10px;
+		background-color: black;
+	}
+	
+	.scroller_gradiant {
+		position: absolute;
+		width: 100%;
+		height: 100%;	
+		left: 0%;
+		overflow: hidden;
+		
+		background: -webkit-gradient(linear, left top, left bottom,
+                from(#111), to(#111),
+				color-stop(0.45, #ccc), color-stop(0.55, #ccc))!important;
+	}
+	
+	.scroller_scroller {
+		position: absolute;
+		width: 100%;
+		height: auto;	
+		
+		-webkit-transition: top 0.5s;
+		-webkit-animation-name: maximise;
+		-webkit-animation-duration: 0.5s;
+		-webkit-animation-timing-function: ease-in-out;
+		-webkit-animation-direction: alternate;		
+	}
+	
+	.scroller_item {
+		width: 100%;	
+		font-size: 250%;
+		text-shadow: rgba(0, 0, 0, 0.5) 0 2px 2px;
+		text-align: center;
+	}
+</style>
+
+ <SCRIPT LANGUAGE="JavaScript">
+
+var Scroller = function(id, conf) {
+	if(!id) return null;
+	
+	this.parent = document.getElementById(id);
+	if(!this.parent) return;	
+	
+	this.conf = conf;
+	this.items = [];
+	if(this.conf.range) {
+		var min = this.conf.range[0];
+		var max = this.conf.range[1];		
+		if(max < min) return;		
+		for(var i = min; i <= max; i++) this.items.push(i);
+	} else if(this.conf.items) {
+		this.items = this.conf.items.slice(0);
+	} else {
+		return;
+	}
+	
+	this.onSelect = this.conf.onSelect;
+	this.callBackArgs = this.conf.callBackArgs;
+	
+	this.total = this.items.length;
+	this.mouseOver = false;
+	this.currentTop = 0;
+	
+	var dim = getDimesions(this.parent, true);
+	this.scrollBy = dim.height;
+	
+	this.initialise();
+}
+
+Scroller.prototype.initialise = function() {
+	var i;
+	this.itemsEl = [];	
+	var that = this;
+	this.container = build(this.parent, 'scroller_container');	
+	this.gradiant = build(this.container, 'scroller_gradiant');
+	this.scroller = build(this.gradiant, 'scroller_scroller');	
+	for(i = 0; i < this.total; i++) {
+		this.itemsEl[i] = build(this.scroller, 'scroller_item');
+		this.itemsEl[i].style.height = this.scrollBy + "px";
+		this.itemsEl[i].innerText = this.items[i];
+	}
+	this.container.onmousewheel = function(e) {
+		that.startScroll(e);
+	};
+	this.container.onmouseover = function(e) {		
+		that.mouseOver = true;
+	};
+	this.container.onmouseout = function(e) {
+		that.mouseOver = false;
+	};
+	
+	function build(parent, css, type) {
+		if(!parent) return;
+		var el = document.createElement((type ? type : "div"));
+		if(css) el.className = css;
+		parent.appendChild(el);
+		
+		return el;
+	}
+};
+
+Scroller.prototype.startScroll = function(e) {
+	if(!this.mouseOver) return;
+	var delta = 0;
+	if (!event) /* For IE. */
+		event = window.event;
+	if (event.wheelDelta) { /* IE/Opera. */
+		delta = event.wheelDelta/120;
+		/** In Opera 9, delta differs in sign as compared to IE.
+		 */
+		if (window.opera)
+			delta = -delta;
+	} else if (event.detail) { /** Mozilla case. */
+		/** In Mozilla, sign of delta is different than in IE.
+		 * Also, delta is multiple of 3.
+		 */
+		delta = -event.detail/3;
+	}
+	/** If delta is nonzero, handle it.
+	 * Basically, delta is now positive if wheel was scrolled up,
+	 * and negative, if wheel was scrolled down.
+	 */
+	if (delta) {
+		if(this.handle(delta) != 0) {
+			if(this.onSelect) this.onSelect(this.getValue(), this.currentTop, this.callBackArgs);
+		}
+	}
+	/** Prevent default actions caused by mouse wheel.
+	 * That might be ugly, but we handle scrolls somehow
+	 * anyway, so don't bother here..
+	 */
+	if (event.preventDefault)
+		event.preventDefault();
+	event.returnValue = false;
+}
+
+Scroller.prototype.handle = function(delta) {
+	if (delta < 0) {
+		if(( this.currentTop - this.scrollBy ) < (this.scrollBy * (this.total-1))) {
+			return this.scrollUp(1);
+		}		
+	} else {
+		if (( this.currentTop - this.scrollBy ) < (this.scrollBy * (this.total-1))) {
+			return this.scrollDown(1);
+		}	
+	}		
+}
+
+Scroller.prototype.scrollUp = function(steps) {
+	var newTop = this.currentTop + 1;
+	if(!(newTop > this.total - 1)) {
+		this.currentTop = newTop;
+		this.scroller.style.top = 0 - (this.currentTop*this.scrollBy) + "px";
+		return steps;
+	}
+};
+
+Scroller.prototype.scrollDown = function(steps) {
+	var newTop = this.currentTop - 1;
+	if(!(newTop < 0)) {
+		this.currentTop = newTop;
+		this.scroller.style.top = 0 - (this.currentTop*this.scrollBy) + "px";
+		return steps;
+	}
+};
+
+Scroller.prototype.getValue = function() {
+	return this.items[this.currentTop];	
+};
+
+
+var message;
+function init() {
+	message = document.getElementById("message");
+	var days = {'range': [1,31], 'onSelect': showDate};
+	var months = {'items': ['Jan', 'Feb', 'Mar',
+							'Apr', 'May', 'Jun',
+							'Jul', 'Aug', 'Sep',
+							'Oct', 'Nov', 'Dec',
+							], 'onSelect': showDate};
+	var years = {'range': [1980, 2050], 'onSelect': showDate};
+	
+	var scroller = new Scroller('scroller', days);
+	var scroller1 = new Scroller('scroller1', months);
+	var scroller2 = new Scroller('scroller2', years);
+	
+	function showDate() {
+		var day = scroller.getValue();
+		var month = scroller1.getValue();
+		var year = scroller2.getValue();
+		write("Date : " + month + " " + day + ", " + year);
+	}
+}
+
+function write(s) {
+	message.innerHTML = s;
+}
+
+function getDimesions(el,rInt) {
+	if(!el ) return;
+	var top = el.offsetTop;
+	var left = el.offsetLeft;
+	var height = el.offsetHeight;
+	var width = el.offsetWidth;
+	
+	if(rInt) {
+		return { 
+			'top': parseInt(top),
+			'left': parseInt(left),
+			'width': parseInt(width),
+			'height': parseInt(height)
+		};
+	}
+	
+	return { 
+		'top': top,
+		'left': left,
+		'width': width,
+		'height': height
+	};
+}
+</script>	
+</head>
+<body onload="init();">
+	<div id="scroller"></div>
+	<div id="scroller1"></div>
+	<div id="scroller2"></div>
+	<div id="message"></div>
+</body>
+</html>

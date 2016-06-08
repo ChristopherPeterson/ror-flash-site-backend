@@ -1,0 +1,12 @@
+<% remote_form_for @category, :complete => "showHome()" do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <%= f.label "Client (leave blank for public gallery)" %><br />
+    <%= f.collection_select :user_id, User.find_all_by_roles_mask(0..6), :id, :username, {:prompt => true} %>
+  </p>
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p><%= f.submit "Submit" %></p>
+<% end %>

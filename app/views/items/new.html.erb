@@ -1,0 +1,8 @@
+<% title "New Item" %>
+<% content_for :nav do %>
+  <li class="last_item"><%= link_to "Back", shop_path %></li>
+<% end %>
+
+<section id="item">
+  <%= render :partial => 'form' %>
+</section>

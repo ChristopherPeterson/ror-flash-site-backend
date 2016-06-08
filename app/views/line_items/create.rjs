@@ -1,0 +1,3 @@
+page.replace_html "notice", 
+                  "<div id=\"flash_notice\">#{flash[:notice]} View #{link_to "Your Shopping Cart", current_cart_url}.</div>"
+flash.discard

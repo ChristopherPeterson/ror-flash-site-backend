@@ -1,0 +1,68 @@
+<% title @post.title %>
+<% content_for :nav do %>
+  <% if can?(:update, Category) || can?(:update, Item) || can?(:update, User) || can?(:index, Cart) %>
+  <li class="last_item"><a href="#">Admin Tools</a>
+    <ul>
+      <% if can?(:index, Cart) %>
+      <li><%= link_to "All Orders", carts_path %></li>
+      <% end %>
+      <% if can?(:update, User) %>
+      <li><%= link_to "All Users", users_path %></li>
+      <li><%= link_to "New User", formatted_new_user_path(:format => "html"), :class => "lightwindow" %></li>
+      <% end %>
+      <% if can? :update, Category %>
+      <li><%= link_to "New Gallery", formatted_new_category_path(:format => "html"), :class => "lightwindow" %></li>
+      <% end %>
+      <% if can? :update, Item %>
+      <li><%= link_to "New Item", new_item_path %></li>
+      <% end %>
+      <% if can? :update, Post %>
+      <li><%= link_to "New Post", formatted_new_post_path(:format => "html"), :class => "lightwindow" %></li>
+      <% end %>
+      <% if can? :update, Post %>
+        <li><%= link_to "Edit Post", formatted_edit_post_path(@post, :format => "html"), :class => "lightwindow" %></li>
+        <li><%= link_to "Delete Post", @post, :confirm => 'Are you sure?', :method => :delete %></li>
+      <% end %>
+    </ul>
+  </li>
+  <% end %>
+<% end %>
+
+<article id="item">
+  
+  <%=h @post.body %>
+  
+  <ul id="comments">
+    <% for comment in @comments %>
+    <li id="comment_<%="#{comment.id}"%>" class="comment">
+      <header>
+        <h2><%="#{h(comment.title)} by #{comment.user.username}" %></h2>
+        <% if can? :update, Comment %>
+        <%= link_to "Edit Comment", formatted_edit_comment_path(comment, :format => "html"), :class => "lightwindow" %>&nbsp;&nbsp;
+        <%= link_to "Delete Comment", comment, :confirm => 'Are you sure?', :method => :delete %>
+        <% end %>
+      </header>
+        
+      <p><%=h comment.comment %></p>
+    </li>
+    <% end %>
+  </ul>
+  
+  <div class="comment">
+    <header>
+      <h2><%="Add a New Comment" %></h2>
+    </header>
+    <%= render :partial => 'comments/form', :locals => { :object => @post, :comment => @new_comment } %>
+  </div>
+  
+</article>
+  
+<section id="item_description">
+  <header>
+    <h2><%=h @post.title %></h2>
+    <% if can? :update, Post %>
+    <%= link_to "Edit Post", formatted_edit_post_path(@post, :format => "html"), :class => "lightwindow" %>&nbsp;&nbsp;
+    <%= link_to "Delete Post", @post, :confirm => 'Are you sure?', :method => :delete %>
+    <% end %>
+  </header>
+</section>

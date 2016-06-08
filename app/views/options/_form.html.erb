@@ -1,0 +1,20 @@
+<% remote_form_for @option, :complete => "showHome()" do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <%= f.label :item_id %><br />
+    <%= f.collection_select :item_id, Item.all, :id, :name %>
+  </p>
+  <p>
+    <%= f.label :details %><br />
+    <%= f.text_field :details %>
+  </p>
+  <p>
+    <%= f.label :quantity %><br />
+    <%= f.text_field :quantity %>
+  </p>
+  <p>
+    <%= f.label :price %><br />
+    <%= f.text_field :price %>
+  </p>
+  <p><%= f.submit "Submit" %></p>
+<% end %>

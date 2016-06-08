@@ -1,0 +1,92 @@
+<% title "Items" %>
+<% content_for :nav do %>
+  <li><a href="<%=new_category_path%>">New Category</a></li>
+  <li class="last_item"><a href="<%=new_item_path%>">New Item</a></li>
+<% end %>
+
+<% @nth_item = false %>
+<ul id="items">
+<% for item in @items %>
+
+  <li id="<%="item_#{item.id}"%>" class="<%=(@nth_item == true)? "nth_item item" : "item"%>">
+    <article>
+	    <%= image_tag item.photo.url(:full) %>
+    </article>
+      
+    <header>
+      <strong><%= item.name %></strong><br />
+      <% if can? :update, Option %>
+        <%= link_to "New Option", new_option_path %>&nbsp;&nbsp;
+      <% end %>  
+      <% if can? :update, Item %>
+        <% if item.enabled.to_i == 0 %>
+        	<span id="<%="item_#{item.id}_enabled"%>">
+        	  <%= link_to_remote "Enable", :url => enable_item_path(item), :method => :get, :complete => "showHome()" %>
+      	  </span>
+      	  <% else %>
+        	<span id="<%="item_#{item.id}_enabled"%>">
+        	  <%= link_to_remote "Disable", :url => disable_item_path(item), :method => :get, :complete => "showHome()" %>
+      	  </span>
+    	  <% end %>&nbsp;&nbsp;
+        <%= link_to "Edit", edit_item_path(item) %>&nbsp;&nbsp;
+        <%= link_to_remote "Destroy", :url => item, :confirm => 'Are you sure?', :method => :delete, :complete => "showHome()" %>&nbsp;&nbsp;
+      <% end %>
+      <small class="break">&nbsp;</small>
+      
+        <small>
+          <%= simple_format h(item.description) %>
+          <small class="break">&nbsp;</small>
+          
+          <ul id="<%="item_#{item.id}_options"%>">
+          <% for option in item.options %>
+            <% if (can? :update, Option) || (option.enabled == 1) %>
+            <li id="<%="item_#{item.id}_option_#{option.id}"%>">
+              <%= simple_format h(option.details) %>
+              <% if can? :update, Option %>
+                <%= simple_format "#{h(number_to_currency(option.price))}  (#{option.quantity} In Stock)" %>
+              <% else %>
+                <%= simple_format "#{h(number_to_currency(option.price))}  #{(option.quantity > 0) ? "(In Stock)" : "(1 - 2 Week Shipping Delay)" }" %>
+              <% end %>
+              <% if can? :update, Option %>
+                <% if option.enabled.to_i == 0 %>
+                	<span id="<%="option_#{option.id}_enabled"%>">
+                	  <%= link_to_remote "Enable", :url => enable_option_path(option), :method => :get, :complete => "showHome()" %>
+              	  </span>
+              	  <% else %>
+                	<span id="<%="option_#{option.id}_enabled"%>">
+                	  <%= link_to_remote "Disable", :url => disable_option_path(option), :method => :get, :complete => "showHome()" %>
+              	  </span>
+            	  <% end %>&nbsp;&nbsp;
+            	  <%= link_to "Edit", edit_option_path(option) %>&nbsp;&nbsp;
+                <%= link_to "Destroy", option, :confirm => 'Are you sure?', :method => :delete %>&nbsp;&nbsp;
+              <% end %>
+              <%= link_to_remote "Add to Cart", :url => line_items_path(:option_id => option), :method => :post, :complete => "showHome()" %>
+              <br />
+            </li>
+            <% end %>
+          <% end %>
+          </ul>
+        </small>
+    </header> 
+  </li>
+  
+  <% @nth_item = true %>
+
+  <% if can? :update, Option %>
+    <%= sortable_element("item_#{item.id}_options", 
+    				    				 :url		     => sort_options_path,
+    				    				 :ghosting 	 => false,
+    				    				 :scroll     => "window",
+    				    				 :with       => "Sortable.serialize('item_#{item.id}_options', {name:'options'})",
+    				    				 :complete 	 => "showHome();").untaint %>
+  <% end %>
+<% end %>
+</ul>
+
+<% if can? :update, Item %>
+  <%= sortable_element("items", 
+  				    				 :url		     => sort_items_path,
+  				    				 :ghosting 	 => false,
+  				    				 :scroll     => "window",
+  				    				 :complete 	 => "showHome();").untaint %>
+<% end %>

@@ -1,0 +1,100 @@
+<% title @item.name %>
+<% content_for :nav do %>
+  <% if can?(:update, Category) || can?(:update, Item) || can?(:update, Option) || can?(:update, User) || can?(:index, Cart) %>
+  <li class="last_item"><a href="#">Admin Tools</a>
+    <ul>
+      <% if can?(:index, Cart) %>
+      <li><%= link_to "All Orders", carts_path %></li>
+      <% end %>
+      <% if can?(:update, User) %>
+      <li><%= link_to "All Users", users_path %></li>
+      <li><%= link_to "New User", formatted_new_user_path(:format => "html"), :class => "lightwindow" %></li>
+      <% end %>
+      <% if can? :update, Category %>
+      <li><%= link_to "New Gallery", formatted_new_category_path(:format => "html"), :class => "lightwindow" %></li>
+      <% end %>
+      <% if can? :update, Item %>
+      <li><%= link_to "New Item", new_item_path %></li>
+      <% end %>
+      <% if can?(:update, Option) %>
+      <li><%= link_to "New Option", formatted_new_option_path(:format => "html"), :class => "lightwindow" %></li>
+      <% end %>  
+      <% if can? :update, Item %>
+        <% if @item.enabled.to_i == 0 %>
+        	<li>
+            <span id="<%="item_#{@item.id}_enabled"%>">
+          	  <%= link_to_remote "Publish Item", :url => enable_item_path(@item), :method => :get, :complete => "showHome()" %>
+        	  </span>
+      	  </li>
+    	  <% else %>
+      	  <li>
+          	<span id="<%="item_#{@item.id}_enabled"%>">
+          	  <%= link_to_remote "Unpublish Item", :url => disable_item_path(@item), :method => :get, :complete => "showHome()" %>
+        	  </span>
+      	  </li>
+    	  <% end %>
+        <li><%= link_to "Edit Item", edit_item_path(@item) %></li>
+        <li><%= link_to "Delete Item", @item, :confirm => 'Are you sure?', :method => :delete %></li>
+      <% end %>
+    </ul>
+  </li>
+  <% end %>
+<% end %>
+
+<section id="item">
+  <%= link_to (image_tag @item.photo.url(:medium)), image_path(@item.photo.url(:full)), {:width => "293", :height => "100", :class => "medium lightwindow"} %>
+</section>
+
+<section id="item_description">
+  <header>
+    <%= content_tag(:h2, @item.name) %>
+    <%= content_tag(:small, "#{link_to(@item.category.name, category_path(@item.category.id))}&nbsp;&nbsp;&nbsp;&nbsp;#{link_to("Enlarge", image_path(@item.photo.url(:full)), {:class => "images lightwindow"})}") %>
+  </header>
+  <%= content_tag :p, h(@item.description) %>
+    
+  <% form_remote_tag(:url => line_items_path(), :method => :post, :complete => "showHome()") do %>
+    <%= collection_select(:line_item, :option_id, @item.options.find_all_by_enabled(1), :id, :details_with_price, {:prompt => true})%>
+    <%= select_tag(:quantity, "<option selected=\"selected\">1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option>") %>
+    <%= submit_tag "Add to Cart" %>
+  <% end %>
+  
+  <% if can? :update, Option %>
+  <ul id="options">
+  <% for option in @item.options %>
+    <% if ((can? :update, Option) ||
+           ((option.enabled.to_i != 0) && (cannot? :update, Option))) %>
+    <li id="<%="option_#{option.id}"%>" class="movable">
+      <%= content_tag :h3, h(option.details) %>
+      <% if can? :update, Option %>
+        <%= "#{h(number_to_currency(option.price))}  (#{option.quantity} In Stock)" %>
+      <% else %>
+        <%= "#{h(number_to_currency(option.price))}  #{(option.quantity > 0) ? "(In Stock)" : "(1 - 2 Week Shipping Delay)" }" %>
+      <% end %>
+      <% if can? :update, Option %>
+        <% if option.enabled.to_i == 0 %>
+        	<span id="<%="option_#{option.id}_enabled"%>">
+        	  <%= link_to_remote "Publish Option", :url => enable_option_path(option), :method => :get, :complete => "showHome()" %>
+      	  </span>
+      	  <% else %>
+        	<span id="<%="option_#{option.id}_enabled"%>">
+        	  <%= link_to_remote "Unpublish Option", :url => disable_option_path(option), :method => :get, :complete => "showHome()" %>
+      	  </span>
+    	  <% end %>&nbsp;&nbsp;
+    	  <%= link_to "Edit Option", formatted_edit_option_path(option, :format => "html"), :class => "lightwindow" %>&nbsp;&nbsp;
+        <%= link_to "Delete Option", option, :confirm => 'Are you sure?', :method => :delete %>&nbsp;&nbsp;
+      <% end %>
+    </li>
+    <% end %>
+  <% end %>
+  </ul>
+  <% end %>
+<% if can? :update, Option %>
+  <%= javascript_tag "Position.includeScrollOffsets = true" %>
+  <%= sortable_element("options", 
+  				    				 :url		     => sort_options_path,
+  				    				 :ghosting 	 => false,
+  				    				 :constraint => false,
+      				    		 :scroll     => "'content'", 
+  				    				 :complete   => "showHome()") %>
+<% end %>
+</section>

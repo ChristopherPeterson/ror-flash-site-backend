@@ -1,0 +1,104 @@
+<% title "All Orders" %>
+<% content_for :nav do %>
+  <% if can?(:update, Category) || can?(:update, Item) || can?(:update, User) || can?(:index, Cart) %>
+  <li class="last_item"><a href="#">Admin Tools</a>
+    <ul>
+      <% if can?(:index, Cart) %>
+      <li><%= link_to "All Orders", carts_path %></li>
+      <% end %>
+      <% if can?(:update, User) %>
+      <li><%= link_to "All Users", users_path %></li>
+      <li><%= link_to "New User", formatted_new_user_path(:format => "html"), :class => "lightwindow" %></li>
+      <% end %>
+      <% if can? :update, Category %>
+      <li><%= link_to "New Gallery", formatted_new_category_path(:format => "html"), :class => "lightwindow" %></li>
+      <% end %>
+      <% if can? :update, Item %>
+      <li><%= link_to "New Item", new_item_path %></li>
+      <% end %>
+    </ul>
+  </li>
+  <% end %>
+<% end %>
+
+<% for cart in @carts %>
+  <% display = false %>
+  <% if cart.user_id != nil %>
+    <% if (!cart.user.role?(:admin)) || (current_user.role?(:admin)) %>
+      <% display = true %>
+    <% end %>
+  <% else %>
+    <% display = true %>
+  <% end %>
+  
+  <% if display == true %>
+  <div id="<%="cart_#{cart.id}"%>">
+    <header class="cart_header">
+      <h2><%=(cart.user_id == nil)? "Guest's" : "#{cart.user.username.capitalize}'s" %> Order <%=cart.id%></h2>
+      <p id="<%= "cart_#{cart.id}_sent"%>"><%= (cart.sent_at == nil) ? "Order not marked shipped yet." : "Order marked shipped: #{cart.sent_at.strftime("%m/%d/%Y %I:%M%p")}."%></p>
+      <p id="<%= "cart_#{cart.id}_delivered"%>"><%= (cart.delivered_at == nil) ? "Order not marked delivered yet." : "Order marked delivered: #{cart.delivered_at.strftime("%m/%d/%Y %I:%M%p")}."%></p>
+    </header>
+    <table class="line_items">
+      <tr>
+        <th  class="first_item">Item</th>
+        <th>Description</th>
+        <th>Details</th>
+        <th>Qty</th>
+        <th class="price">Unit Price</th>
+        <th class="price">Full Price</th>
+        <th>
+          Modify:<br />
+          <%= link_to_remote 'Delete Order', :url => cart, :confirm => 'Are you sure?', :method => :delete, :complete => "showHome()" %>
+          <%= link_to_remote 'Mark Shipped', :url => sent_cart_url(cart), :method => :get, :complete => "showHome()" %>
+          <%= link_to_remote 'Mark Delivered', :url => delivered_cart_url(cart), :method => :get, :complete => "showHome()" %>
+        </th>
+      </tr>
+      <% for line_item in cart.line_items %>
+        <tr id="<%= "line_item_#{line_item.id}"%>" class="<%= cycle :odd, :even %>">
+          <td  class="first_item"><%=link_to(image_tag(line_item.option.item.photo.url(:thumb)), item_path(line_item.option.item)) %></td>
+          <td><%=h line_item.option.item.name %></td>
+          <td><%=h line_item.option.details %></td>
+          <td id="<%="line_item_#{line_item.id}_quantity"%>" class="qty"><%= line_item.quantity %></td>
+          <td class="price"><%= number_to_currency(line_item.unit_price) %></td>
+          <td id="<%="line_item_#{line_item.id}_full_price"%>" class="price"><%= number_to_currency(line_item.full_price) %></td>
+          <td>
+            <%= link_to_remote "Edit Item", :url => edit_line_item_path(line_item), :method => :get, :complete => "showHome()" %>
+            <%= link_to_remote 'Remove Item', :url => line_item, :confirm => 'Are you sure?', :method => :delete, :complete => "showHome()" %>
+          </td>
+        </tr>
+      <% end %>
+      <tr>
+        <td id="<%="cart_#{cart.id}_total"%>" class="total price" colspan="6">
+          Total: <%= number_to_currency cart.total_price %>
+        </td>
+        <td class="total">&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="5" class="first_item">
+          <header class="cart_header">
+            <h3>Payment Notifications</h3>
+          </header>
+          <table class="line_items">
+          <tr>
+            <th class="first_item">Tx Id</th>
+            <th>Status</th>
+            <th>Params</th>
+          </tr>
+          <% for payment_notification in cart.payment_notifications %>
+          <tr class="<%= cycle :odd, :even %>">
+            <td class="first_item"><%=h payment_notification.transaction_id %></td>
+            <td><%=h payment_notification.status %></td>
+            <td>
+              <% payment_notification.params.each_pair do |k,v| %>
+                    <%=h(k)%>:&nbsp;<%=h(v)%><br />
+              <% end %>           
+            </td>
+          </tr>
+          <% end %>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <% end %>
+<% end %>

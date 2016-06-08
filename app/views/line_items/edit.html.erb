@@ -1,0 +1,12 @@
+<% title "Edit Item" %>
+<% content_for :nav do %>
+  <li><a href="<%=new_category_path%>">New Category</a></li>
+  <li class="last_item"><a href="<%=new_item_path%>">New Item</a></li>
+<% end %>
+
+<%= render :partial => 'form' %>
+
+<p>
+  <%= link_to "Back to Cart", current_cart_url %>
+  <%= link_to "Continue Shopping", shop_path %>
+</p>

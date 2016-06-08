@@ -1,0 +1,58 @@
+<% title "Shopping Cart" %>
+<% content_for :nav do %>
+  <% if can?(:update, Category) || can?(:update, Item) || can?(:update, User) || can?(:index, Cart) %>
+  <li class="last_item"><a href="#">Admin Tools</a>
+    <ul>
+      <% if can?(:index, Cart) %>
+      <li><%= link_to "All Orders", carts_path %></li>
+      <% end %>
+      <% if can?(:update, User) %>
+      <li><%= link_to "All Users", users_path %></li>
+      <li><%= link_to "New User", formatted_new_user_path(:format => "html"), :class => "lightwindow" %></li>
+      <% end %>
+      <% if can? :update, Category %>
+      <li><%= link_to "New Gallery", formatted_new_category_path(:format => "html"), :class => "lightwindow" %></li>
+      <% end %>
+      <% if can? :update, Item %>
+      <li><%= link_to "New Item", new_item_path %></li>
+      <% end %>
+    </ul>
+  </li>
+  <% end %>
+<% end %>
+
+<table class="line_items">
+  <tr>
+    <th class="first_item">Item</th>
+    <th>Description</th>
+    <th>Qty</th>
+    <th class="price">Price</th>
+    <th>Modify</th>
+  </tr>
+  <% for line_item in @cart.line_items %>
+    <tr id="<%= "line_item_#{line_item.id}"%>" class="<%= cycle :odd, :even %>">
+      <td class="first_item"><%= link_to (image_tag line_item.option.item.photo.url(:thumb)), item_path(line_item.option.item) %></td>
+      <td><%=h line_item.option.item.name %></td>
+      <td id="<%="line_item_#{line_item.id}_quantity"%>" class="qty"><%= line_item.quantity %></td>
+      <td id="<%="line_item_#{line_item.id}_full_price"%>" class="price"><%= number_to_currency(line_item.full_price) %></td>
+      <td>
+        <%= link_to_remote "Edit", :url => edit_line_item_path(line_item), :method => :get %>
+        <%= link_to_remote 'Remove', :url => line_item, :confirm => 'Are you sure?', :method => :delete, :complete => "showHome()" %>
+      </td>
+    </tr>
+  <% end %>
+  <tr>
+    <td id="<%="cart_#{@cart.id}_total"%>" class="total price" colspan="4">
+      Total: <%= number_to_currency @cart.total_price %>
+    </td>
+    <td class="total">
+      <% form_tag APP_CONFIG[:paypal_url] do %>
+      <%= hidden_field_tag :cmd, "_s-xclick" %>
+      <%= hidden_field_tag :encrypted, @cart.paypal_encrypted(shop_path, payment_notifications_url(:secret => APP_CONFIG[:paypal_secret])) %>
+      <%= submit_tag "Pay with PayPal!" %>
+      <% end %>
+    </td>
+  </tr>
+</table>
+
+

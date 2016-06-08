@@ -1,0 +1,5 @@
+page["item_#{@item_id}_enabled"].replace_html(link_to_remote "Publish Item", :url => enable_item_path(@item_id), :method => :get, :complete => "showHome()")
+
+page.replace_html "notice", 
+                  "<div id=\"flash_notice\">#{flash[:notice]}</div>"
+flash.discard

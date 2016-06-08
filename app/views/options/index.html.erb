@@ -1,0 +1,52 @@
+<% title "Option" %>
+<% content_for :nav do %>
+  <li><a href="<%=new_category_path%>">New Category</a></li>
+  <li class="last_item"><a href="<%=new_item_path%>">New Item</a></li>
+<% end %>
+
+<% @nth_item = false %>
+<ul id="options">
+<% for option in @options %>
+
+  <li id="<%="option_#{option.id}"%>" class="<%=(@nth_item == true)? "nth_item item" : "item"%>">
+    <article>
+	    <%= image_tag option.item.photo.url(:full) %>
+    </article>
+      
+    <header>
+      <strong><%= option.item.name %></strong><br />
+      <% if can? :update, Option %>
+        <% if option.enabled.to_i == 0 %>
+        	<span id="<%="option_#{option.id}_enabled"%>">
+        	  <%= link_to_remote "Enable", :url => enable_option_path(option), :method => :get %>
+      	  </span>
+      	  <% else %>
+        	<span id="<%="option_#{option.id}_enabled"%>">
+        	  <%= link_to_remote "Disable", :url => disable_option_path(option), :method => :get %>
+      	  </span>
+    	  <% end %>&nbsp;&nbsp;
+    	  <%= link_to "Edit", edit_option_path(option) %>&nbsp;&nbsp;
+        <%= link_to "Destroy", option, :confirm => 'Are you sure?', :method => :delete %>&nbsp;&nbsp;
+      <% end %>
+      <%= link_to_remote "Add to Cart", :url => line_items_path(:option_id => option), :method => :post, :complete => "showHome()" %>
+      <small class="break">&nbsp;</small>
+      <small>
+        <%= simple_format h(option.item.description) %>
+        <%= simple_format h(option.details) %>
+        <%= number_to_currency(option.price) %>
+      </small>
+      
+    </header> 
+  </li>
+  <% @nth_item = true %>
+
+<% end %>
+</ul>
+
+<% if can? :update, Option %>
+  <%= sortable_element("options", 
+  				    				 :url		     => sort_options_path,
+  				    				 :ghosting 	 => false,
+  				    				 :scroll     => "window",
+  				    				 :complete 	 => visual_effect(:highlight, "options")).untaint %>
+<% end %>

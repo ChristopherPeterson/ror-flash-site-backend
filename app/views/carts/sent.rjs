@@ -1,0 +1,5 @@
+page["cart_#{@cart.id}_sent"].replace_html(@sent_at)
+
+page.replace_html "notice", 
+                  "<div id=\"flash_notice\">#{flash[:notice]}</div>"
+flash.discard

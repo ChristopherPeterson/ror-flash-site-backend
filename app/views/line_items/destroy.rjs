@@ -1,0 +1,6 @@
+page["line_item_#{@line_item.id}"].visual_effect(:fade, :duration => 0.5)
+page["cart_#{@cart.id}_total"].replace_html "Total: #{number_to_currency @cart.total_price}"
+
+page.replace_html "notice", 
+                  "<div id=\"flash_notice\">#{flash[:notice]}</div>"
+flash.discard

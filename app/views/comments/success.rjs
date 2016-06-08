@@ -1,0 +1,5 @@
+page.redirect_to posts_path
+
+page.replace_html "notice", 
+                  "<div id=\"flash_notice\">#{flash[:notice]}</div>"
+flash.discard

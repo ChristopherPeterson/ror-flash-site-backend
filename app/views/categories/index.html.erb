@@ -1,0 +1,101 @@
+<% content_for :nav do %>
+  <% if can?(:update, Category) || can?(:update, Item) || can?(:update, User) || can?(:index, Cart) %>
+  <li class="last_item"><a href="#">Admin Tools</a>
+    <ul>
+      <% if can?(:index, Cart) %>
+      <li><%= link_to "All Orders", carts_path %></li>
+      <% end %>
+      <% if can?(:update, User) %>
+      <li><%= link_to "All Users", users_path %></li>
+      <li><%= link_to "New User", formatted_new_user_path(:format => "html"), :class => "lightwindow" %></li>
+      <% end %>
+      <% if can? :update, Category %>
+      <li><%= link_to "New Gallery", formatted_new_category_path(:format => "html"), :class => "lightwindow" %></li>
+      <% end %>
+      <% if can? :update, Item %>
+      <li><%= link_to "New Item", new_item_path %></li>
+      <% end %>
+    </ul>
+  </li>
+  <% end %>
+<% end %>
+
+<ul id="categories" class="categories">
+<% for category in @categories do %>
+  <% if can? :read, category %>
+  <li id="<%="category_#{category.id}"%>"<%= (can? :update, Category) ? " class=\"admin\"" : "" %>>
+    <div class="<%= (can? :update, Category) ? "category movable admin" : "category" %>">
+      <%= link_to(content_tag(:h2, h(category.name).upcase), category) %>
+      <% if can?(:update, Category) || can?(:update, Item) %>
+      <span class="desc movable">
+        <% if can? :update, Item %>
+        <%= content_tag(:p, link_to("New Item", new_item_path)) %>
+        <% end %>
+        <% if can? :update, Category %>
+          <% if category.enabled.to_i == 0 %>
+          	<p id="<%="category_#{category.id}_enabled"%>">
+          	  <%= link_to_remote "Publish Gallery", :url => enable_category_path(category), :method => :get, :complete => "showHome()" %>
+        	  </p>
+        	  <% else %>
+          	<p id="<%="category_#{category.id}_enabled"%>">
+          	  <%= link_to_remote "Unpublish Gallery", :url => disable_category_path(category), :method => :get, :complete => "showHome()" %>
+        	  </p>
+      	  <% end %>
+          <%= content_tag(:p, link_to("Edit Gallery", formatted_edit_category_path(category, :format => "html"), :class => "lightwindow")) %>
+          <%= content_tag(:p, link_to("Delete Gallery", category, :confirm => 'Are you sure?', :method => :delete)) %>
+        <% end %>
+      </span>
+      <% end %>
+    </div>
+    
+    <ul id="<%="category_#{category.id}_items"%>"<%= (can? :update, Category) ? " class=\"admin\"" : "" %>>
+    <% for item in category.items do %>
+      <% if can? :read, item %>
+      <li id="<%="category_#{category.id}_item_#{item.id}"%>" class="thumbnail">
+        <%= link_to image_tag(item.photo.url(:thumb)), item_path(item) %>
+        <span class="<%= (can? :update, Item) ? "desc movable" : "desc" %>">
+          <%= content_tag(:p, link_to("Ordering Info", item_path(item))) %>
+          <%= content_tag(:p, link_to("Zoom", image_path(item.photo.url(:full)), {:class => "images lightwindow", :rel => "Galleries[#{category.name}]"})) %>
+          
+          <% if can? :update, Item %>
+            <% if item.enabled.to_i == 0 %>
+            	<p id="<%="item_#{item.id}_enabled"%>">
+            	  <%= link_to_remote "Publish Item", :url => enable_item_path(item), :method => :get, :complete => "showHome()" %>
+          	  </p>
+          	  <% else %>
+            	<p id="<%="item_#{item.id}_enabled"%>">
+            	  <%= link_to_remote "Unpublish Item", :url => disable_item_path(item), :method => :get, :complete => "showHome()" %>
+          	  </p>
+        	  <% end %>
+        	  <%= content_tag(:p, link_to("Edit Item", edit_item_path(item))) %>
+            <%= content_tag(:p, link_to("Delete Item", item, :confirm => 'Are you sure?', :method => :delete)) %>
+          <% end %>
+        </span>
+      </li>
+      <% end %>
+    <% end %>
+    </ul>
+    <% if can? :update, Item %>
+      <%= javascript_tag "Position.includeScrollOffsets = true" %>
+      <%= sortable_element("category_#{category.id}_items", 
+      				    				 :url		     => sort_items_path,
+      				    				 :ghosting 	 => false,
+      				    				 :constraint => false,
+      				    				 :scroll     => "'content'", 
+      				    				 :complete   => "showHome()" ) %>
+    <% end %>
+  </li>
+  <% end %>
+<% end %>
+</ul>
+
+<% if can? :update, Category %>
+  <%= javascript_tag "Position.includeScrollOffsets = true" %>
+  <%= sortable_element("categories", 
+  				    				 :url		     => sort_categories_path,
+  				    				 :ghosting 	 => false,
+  				    				 :constraint => false,
+  				    				 :dropOnEmpty => true,
+      				    		 :scroll     => "'content'",
+  				    				 :complete => "showHome()") %>
+<% end %>
